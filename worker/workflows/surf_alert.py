@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -15,6 +17,7 @@ from mistralai.workflows.plugins.mistralai.connectors import (
 )
 
 from worker.config import DEFAULT_RECIPIENT, SPOTS
+from worker.mailer import send_email_smtp
 from worker.selection import build_email
 
 gmail_connector = connector(
@@ -73,7 +76,12 @@ async def send_alert_email(
     text_body: str,
     html_body: str,
     gmail: ToolCallClient = Depends(gmail_connector),
-) -> None:
+) -> str:
+    if os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASSWORD"):
+        await asyncio.to_thread(
+            send_email_smtp, recipient, subject, text_body, html_body
+        )
+        return "smtp"
     await gmail.call_tool(
         "send_email",
         {
@@ -83,6 +91,7 @@ async def send_alert_email(
             "htmlBody": html_body,
         },
     )
+    return "gmail_connector"
 
 
 @workflows.workflow.define(
