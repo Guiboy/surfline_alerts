@@ -7,7 +7,7 @@ TIMEZONE = "Europe/Paris"
 
 OPENMETEO_MARINE_URL = "https://marine-api.open-meteo.com/v1/marine"
 OPENMETEO_WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
-FORECAST_DAYS = 3
+FORECAST_DAYS = 8
 
 # Modèles de vagues validés en Méditerranée (ecmwf_ifs025 exclu : null près des côtes)
 WAVE_MODELS = ("best_match", "meteofrance_wave", "ecmwf_wam025")

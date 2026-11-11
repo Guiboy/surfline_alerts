@@ -28,7 +28,7 @@ gmail_connector = connector(
 class SurfAlertInput(pydantic.BaseModel):
     recipient_email: str = DEFAULT_RECIPIENT
     min_rating: str = "FAIR_TO_GOOD"
-    days_ahead: list[int] = [1, 2]
+    days_ahead: list[int] = [1, 2, 3, 4, 5, 6, 7]
     day_start_hour: int = 6
     day_end_hour: int = 21
     dry_run: bool = False
@@ -102,7 +102,7 @@ async def send_alert_email(
     workflow_display_name="Alertes Surf Martigues–Hyères",
     workflow_description=(
         "Vérifie les prévisions Open-Meteo entre Martigues et Hyères et envoie un "
-        "email lorsque les conditions à J+1/J+2 atteignent le rating minimal."
+        "email lorsque les conditions de la semaine (J+1 à J+7) atteignent le rating minimal."
     ),
 )
 @uses_connectors(gmail_connector)
@@ -124,7 +124,7 @@ class SurfAlertWorkflow:
             return SurfAlertResult(
                 good_windows=[],
                 email_sent=False,
-                message="Aucune bonne condition prévue à J+1/J+2 : pas d'email envoyé.",
+                message="Aucune bonne condition prévue dans la semaine : pas d'email envoyé.",
             )
         subject, text_body, html_body = build_email(windows)
         if config.dry_run:

@@ -52,7 +52,7 @@ def select_good_windows(
     Les créneaux sont groupés par spot et par journée, bornés aux heures
     diurnes [day_start_hour, day_end_hour) du fuseau TIMEZONE.
     """
-    days_ahead = days_ahead if days_ahead is not None else [1, 2]
+    days_ahead = days_ahead if days_ahead is not None else list(range(1, 8))
     tz = ZoneInfo(TIMEZONE)
     now_local = now.astimezone(tz)
     target_dates = {
@@ -173,5 +173,5 @@ def build_email(
         + "<p style=\"color:#888\">Prévisions Open-Meteo — notes calculées automatiquement."
         " Spots : <a href=\"https://www.surfline.com\">Surfline</a>.</p>"
     )
-    subject = f"🏄 Surf : {len(windows)} spot(s) bien notés à J+1/J+2"
+    subject = f"🏄 Surf : {len(windows)} spot(s) bien notés cette semaine"
     return subject, text_body, html_body

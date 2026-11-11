@@ -13,9 +13,9 @@ def test_small_onshore_is_poor():
     assert rating in ("VERY_POOR", "POOR")
 
 
-def test_clean_offshore_waist_high_is_at_least_fair():
+def test_clean_offshore_waist_high_is_conservative():
     rating = compute_rating(1.0, 8.0, 10.0, 20, 200)
-    assert rating in ("FAIR", "FAIR_TO_GOOD", "GOOD")
+    assert rating in ("POOR_TO_FAIR", "FAIR", "FAIR_TO_GOOD")
 
 
 def test_strong_onshore_ruins_big_swell():

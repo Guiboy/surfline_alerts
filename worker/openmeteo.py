@@ -87,7 +87,14 @@ async def _get_json(
     """GET avec retry exponentiel sur 429/5xx (limites de débit Open-Meteo)."""
     delay = 2.0
     for attempt in range(4):
-        response = await client.get(url, params=params)
+        try:
+            response = await client.get(url, params=params)
+        except httpx.TransportError:
+            if attempt == 3:
+                raise
+            await asyncio.sleep(delay)
+            delay *= 2
+            continue
         if response.status_code == 429 or response.status_code >= 500:
             if attempt == 3:
                 response.raise_for_status()

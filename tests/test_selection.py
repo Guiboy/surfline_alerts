@@ -66,12 +66,24 @@ def test_selects_good_windows_next_two_days():
             }
         )
     }
-    windows = select_good_windows(forecasts, SPOTS_BY_ID, now=NOW)
+    windows = select_good_windows(forecasts, SPOTS_BY_ID, now=NOW, days_ahead=[1, 2])
     assert len(windows) == 2
     day1 = next(w for w in windows if w["date"] == "2026-02-06")
     assert [entry["hour"] for entry in day1["intervals"]] == [10, 11]
     assert day1["intervals"][0]["surf_max_m"] == 1.0
     assert day1["intervals"][0]["wind_direction"] == "NE"
+
+
+def test_default_window_covers_seven_days():
+    forecasts = {
+        "spot-1": _forecast(
+            {_ts(offset, 10): "GOOD" for offset in range(1, 8)}
+        )
+    }
+    windows = select_good_windows(forecasts, SPOTS_BY_ID, now=NOW)
+    assert len(windows) == 7
+    assert windows[0]["date"] == "2026-02-06"
+    assert windows[-1]["date"] == "2026-02-12"
 
 
 def test_min_rating_filters_poor():
