@@ -112,7 +112,6 @@ def select_good_windows(
 
 def _format_window_line(window: dict) -> str:
     intervals = window["intervals"]
-    hours = ", ".join(f"{entry['hour']:02d}h" for entry in intervals)
     best = max(intervals, key=lambda entry: rating_rank(entry["rating"]))
     surf_max = max(
         (entry["surf_max_m"] for entry in intervals if entry["surf_max_m"] is not None),
@@ -135,7 +134,7 @@ def _format_window_line(window: dict) -> str:
     surf = f"{surf_max:.1f} m max" if surf_max is not None else "n/d"
     rating_fr = RATING_LABELS_FR.get(best["rating"], best["rating"])
     return (
-        f"{hours} — {rating_fr} ({best['rating'].replace('_', ' ').title()}) — "
+        f"{rating_fr} ({best['rating'].replace('_', ' ').title()}) — "
         f"houle {surf} — vent {wind}{wind_dir}"
     )
 

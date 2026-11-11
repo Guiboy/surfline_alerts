@@ -27,7 +27,7 @@ gmail_connector = connector(
 
 class SurfAlertInput(pydantic.BaseModel):
     recipient_email: str = DEFAULT_RECIPIENT
-    min_rating: str = "FAIR"
+    min_rating: str = "FAIR_TO_GOOD"
     days_ahead: list[int] = [1, 2]
     day_start_hour: int = 6
     day_end_hour: int = 21
