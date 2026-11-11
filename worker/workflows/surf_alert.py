@@ -17,7 +17,9 @@ from mistralai.workflows.plugins.mistralai.connectors import (
 from worker.config import DEFAULT_RECIPIENT, SPOTS
 from worker.selection import build_email
 
-gmail_connector = connector("gmail", run_as="deployment", auto_auth=False)
+gmail_connector = connector(
+    "gmail", run_as="deployment", auto_auth=False, credentials_name="ramilopfamily-gmail-com"
+)
 
 
 class SurfAlertInput(pydantic.BaseModel):
