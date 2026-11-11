@@ -1,6 +1,6 @@
 """Tests de l'assemblage des prévisions Open-Meteo (sans réseau)."""
 
-from worker.openmeteo import build_spot_forecast
+from worker.openmeteo import _as_location_list, build_spot_forecast
 
 MARINE = {
     "utc_offset_seconds": 0,
@@ -41,6 +41,11 @@ def test_wave_heights_scaled_to_surf_range():
     wave = forecast["wave"][2]
     assert wave["surf_min_m"] == round(1.4 * 0.7, 2)
     assert wave["surf_max_m"] == round(1.4 * 1.2, 2)
+
+
+def test_location_list_accepts_batched_and_single_payloads():
+    assert _as_location_list([MARINE, MARINE]) == [MARINE, MARINE]
+    assert _as_location_list(MARINE) == [MARINE]
 
 
 def test_wind_entries_match_weather():
