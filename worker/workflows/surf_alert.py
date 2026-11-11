@@ -77,7 +77,10 @@ async def send_alert_email(
     html_body: str,
     gmail: ToolCallClient = Depends(gmail_connector),
 ) -> str:
-    if os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASSWORD"):
+    smtp_configured = bool(
+        os.environ.get("SMTP_USER") or os.environ.get("smtp_user")
+    ) and bool(os.environ.get("SMTP_PASSWORD") or os.environ.get("smtp_password"))
+    if smtp_configured:
         await asyncio.to_thread(
             send_email_smtp, recipient, subject, text_body, html_body
         )
