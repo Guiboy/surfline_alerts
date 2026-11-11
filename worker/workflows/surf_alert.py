@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import pydantic
@@ -15,7 +15,6 @@ from mistralai.workflows.plugins.mistralai.connectors import (
 )
 
 from worker.config import DEFAULT_RECIPIENT, SPOTS
-from worker.selection import build_email, select_good_windows
 
 gmail_connector = connector("gmail", run_as="deployment", auto_auth=False)
 
@@ -40,6 +39,28 @@ async def fetch_forecasts(spot_ids: list[str]) -> dict[str, dict[str, Any]]:
     from worker.openmeteo import fetch_spot_forecasts
 
     return await fetch_spot_forecasts(spot_ids)
+
+
+@workflows.activity(start_to_close_timeout=timedelta(seconds=120))
+async def select_windows(
+    forecasts: dict[str, dict[str, Any]],
+    spots_by_id: dict[str, dict[str, str]],
+    min_rating: str,
+    days_ahead: list[int],
+    day_start_hour: int,
+    day_end_hour: int,
+) -> list[dict[str, Any]]:
+    from worker.selection import select_good_windows
+
+    return select_good_windows(
+        forecasts,
+        spots_by_id,
+        now=datetime.now(timezone.utc),
+        min_rating=min_rating,
+        days_ahead=days_ahead,
+        day_start_hour=day_start_hour,
+        day_end_hour=day_end_hour,
+    )
 
 
 @workflows.activity(start_to_close_timeout=timedelta(seconds=120))
@@ -76,14 +97,13 @@ class SurfAlertWorkflow:
         config = input or SurfAlertInput()
         spots_by_id = {spot.spot_id: {"name": spot.name, "url": spot.url} for spot in SPOTS}
         forecasts = await fetch_forecasts([spot.spot_id for spot in SPOTS])
-        windows = select_good_windows(
+        windows = await select_windows(
             forecasts,
             spots_by_id,
-            now=workflows.workflow.now(),
-            min_rating=config.min_rating,
-            days_ahead=config.days_ahead,
-            day_start_hour=config.day_start_hour,
-            day_end_hour=config.day_end_hour,
+            config.min_rating,
+            config.days_ahead,
+            config.day_start_hour,
+            config.day_end_hour,
         )
         if not windows:
             return SurfAlertResult(
