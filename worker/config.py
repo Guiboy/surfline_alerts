@@ -54,6 +54,19 @@ RATING_ORDER: dict[str, int] = {
     "EPIC": 9,
 }
 
+RATING_WAVES: dict[str, str] = {
+    "FLAT": "",
+    "VERY_POOR": "🌊",
+    "POOR": "🌊",
+    "POOR_TO_FAIR": "🌊🌊",
+    "FAIR": "🌊🌊",
+    "FAIR_TO_GOOD": "🌊🌊🌊",
+    "GOOD": "🌊🌊🌊",
+    "VERY_GOOD": "🌊🌊🌊🌊",
+    "GOOD_TO_EPIC": "🌊🌊🌊🌊",
+    "EPIC": "🌊🌊🌊🌊🌊",
+}
+
 RATING_LABELS_FR: dict[str, str] = {
     "FLAT": "Plat",
     "VERY_POOR": "Très mauvais",

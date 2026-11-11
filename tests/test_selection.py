@@ -106,3 +106,6 @@ def test_build_email_contains_spot_and_link():
     assert "https://www.surfline.com/surf-report/la-couronne/spot-1" in html_body
     assert "vent" in text_body
     assert "10h" not in text_body and "10:00" not in text_body
+    assert "🌊🌊🌊" in text_body
+    assert "(Good)" not in text_body and "GOOD" not in text_body
+    assert "Légende" in text_body

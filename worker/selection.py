@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 from worker.config import (
     RATING_LABELS_FR,
     RATING_ORDER,
+    RATING_WAVES,
     TIMEZONE,
 )
 
@@ -133,8 +134,9 @@ def _format_window_line(window: dict) -> str:
     wind_dir = f" {('/'.join(directions))}" if directions else ""
     surf = f"{surf_max:.1f} m max" if surf_max is not None else "n/d"
     rating_fr = RATING_LABELS_FR.get(best["rating"], best["rating"])
+    waves = RATING_WAVES.get(best["rating"], "")
     return (
-        f"{rating_fr} ({best['rating'].replace('_', ' ').title()}) — "
+        f"{rating_fr} {waves} — "
         f"houle {surf} — vent {wind}{wind_dir}"
     )
 
@@ -164,13 +166,15 @@ def build_email(
 
     text_body = (
         "Bonnes conditions de surf prévues :\n\n" + "\n".join(text_lines)
+        + "\n\nLégende : 🌊 faible · 🌊🌊 moyen · 🌊🌊🌊 bon · 🌊🌊🌊🌊 très bon · 🌊🌊🌊🌊🌊 épique"
         + "\n\nPrévisions : Open-Meteo (houle + vent) — notes calculées localement."
         + "\nSpots sur Surfline : https://www.surfline.com"
     )
     html_body = (
         "<h2>🏄 Bonnes conditions de surf à venir</h2>"
         + "".join(html_sections)
-        + "<p style=\"color:#888\">Prévisions Open-Meteo — notes calculées automatiquement."
+        + "<p style=\"color:#888\">Légende : 🌊 faible · 🌊🌊 moyen · 🌊🌊🌊 bon · 🌊🌊🌊🌊 très bon · 🌊🌊🌊🌊🌊 épique<br>"
+        "Prévisions Open-Meteo — notes calculées automatiquement."
         " Spots : <a href=\"https://www.surfline.com\">Surfline</a>.</p>"
     )
     subject = f"🏄 Surf : {len(windows)} spot(s) bien notés cette semaine"

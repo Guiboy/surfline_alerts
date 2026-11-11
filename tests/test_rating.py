@@ -15,17 +15,17 @@ def test_small_onshore_is_poor():
 
 def test_clean_offshore_waist_high_is_conservative():
     rating = compute_rating(1.0, 8.0, 10.0, 20, 200)
-    assert rating in ("POOR_TO_FAIR", "FAIR", "FAIR_TO_GOOD")
+    assert rating in ("POOR", "POOR_TO_FAIR", "FAIR")
 
 
 def test_strong_onshore_ruins_big_swell():
     rating = compute_rating(1.5, 7.0, 32.0, 200, 200)
-    assert rating in ("POOR", "POOR_TO_FAIR")
+    assert rating in ("VERY_POOR", "POOR", "POOR_TO_FAIR")
 
 
 def test_big_clean_swell_rates_high():
     rating = compute_rating(2.0, 10.0, 8.0, 20, 200)
-    assert rating in ("VERY_GOOD", "GOOD_TO_EPIC")
+    assert rating in ("GOOD", "VERY_GOOD", "GOOD_TO_EPIC")
 
 
 def test_offshore_wind_beats_onshore_at_same_swell():
@@ -39,8 +39,8 @@ def test_offshore_wind_beats_onshore_at_same_swell():
 def test_mistral_is_offshore_for_prado():
     from worker.config import RATING_ORDER
 
-    mistral = compute_rating(0.8, 7.0, 25.0, 330, 200)
-    same_size_onshore = compute_rating(0.8, 7.0, 25.0, 200, 200)
+    mistral = compute_rating(1.5, 7.0, 25.0, 330, 200)
+    same_size_onshore = compute_rating(1.5, 7.0, 25.0, 200, 200)
     assert RATING_ORDER[mistral] > RATING_ORDER[same_size_onshore]
 
 
