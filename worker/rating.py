@@ -17,20 +17,20 @@ RATING_SCALE: list[str] = [
     "EPIC",
 ]
 
-FLAT_THRESHOLD_M = 0.35
+FLAT_THRESHOLD_M = 0.30
 
 _WAVE_SCORE_POINTS: list[tuple[float, float]] = [
-    (0.45, 0.5),
-    (0.65, 1.0),
-    (0.85, 2.0),
-    (1.10, 3.0),
-    (1.40, 4.0),
-    (1.75, 5.0),
-    (2.15, 6.0),
-    (2.55, 7.0),
-    (2.90, 8.0),
-    (3.20, 7.0),
-    (3.60, 6.0),
+    (0.40, 0.5),
+    (0.60, 1.0),
+    (0.78, 2.0),
+    (1.02, 3.0),
+    (1.30, 4.0),
+    (1.65, 5.0),
+    (2.05, 6.0),
+    (2.45, 7.0),
+    (2.80, 8.0),
+    (3.10, 7.0),
+    (3.55, 6.0),
 ]
 
 
@@ -59,12 +59,12 @@ def period_factor(period_s: float | None) -> float:
     if period_s is None:
         return 1.0
     if period_s < 5.5:
-        return 0.60
+        return 0.65
     if period_s < 7.5:
-        return 0.75
+        return 0.80
     if period_s < 9.5:
-        return 0.90
-    return 1.0
+        return 0.92
+    return 1.02
 
 
 def wind_factor(
@@ -82,19 +82,19 @@ def wind_factor(
     offshore_deg = (facing_deg + 180) % 360
     off = angle_diff(wind_from_deg, offshore_deg)
     if off <= 45:
-        base = 1.00
+        base = 1.02
     elif off <= 80:
-        base = 0.90
+        base = 0.92
     elif off <= 115:
-        base = 0.75
+        base = 0.78
     elif off <= 150:
-        base = 0.60
+        base = 0.62
     else:
-        base = 0.50
+        base = 0.52
     if wind_kts > 30:
-        return base * (0.75 if off <= 45 else 0.65)
+        return base * (0.78 if off <= 45 else 0.68)
     if wind_kts > 22:
-        return base * (0.85 if off <= 45 else 0.75)
+        return base * (0.88 if off <= 45 else 0.78)
     return base
 
 
