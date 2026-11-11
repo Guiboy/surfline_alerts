@@ -1,8 +1,8 @@
-"""Workflow d'alertes surf Surfline (Martigues → Hyères)."""
+"""Workflow d'alertes surf Open-Meteo (Martigues → Hyères)."""
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from typing import Any
 
 import pydantic
@@ -65,7 +65,7 @@ async def send_alert_email(
     name="surfline-alerts",
     workflow_display_name="Alertes Surf Martigues–Hyères",
     workflow_description=(
-        "Vérifie les prévisions Surfline entre Martigues et Hyères et envoie un "
+        "Vérifie les prévisions Open-Meteo entre Martigues et Hyères et envoie un "
         "email lorsque les conditions à J+1/J+2 atteignent le rating minimal."
     ),
 )
@@ -79,7 +79,7 @@ class SurfAlertWorkflow:
         windows = select_good_windows(
             forecasts,
             spots_by_id,
-            now=datetime.now(timezone.utc),
+            now=workflows.workflow.now(),
             min_rating=config.min_rating,
             days_ahead=config.days_ahead,
             day_start_hour=config.day_start_hour,
