@@ -16,7 +16,6 @@ from mistralai.workflows.plugins.mistralai.connectors import (
 
 from worker.config import DEFAULT_RECIPIENT, SPOTS
 from worker.selection import build_email, select_good_windows
-from worker.surfline import fetch_spot_forecasts
 
 gmail_connector = connector("gmail", run_as="deployment", auto_auth=False)
 
@@ -38,6 +37,8 @@ class SurfAlertResult(pydantic.BaseModel):
 
 @workflows.activity(start_to_close_timeout=timedelta(seconds=120))
 async def fetch_forecasts(spot_ids: list[str]) -> dict[str, dict[str, Any]]:
+    from worker.surfline import fetch_spot_forecasts
+
     return await fetch_spot_forecasts(spot_ids)
 
 
