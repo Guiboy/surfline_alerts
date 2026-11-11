@@ -37,7 +37,7 @@ class SurfAlertResult(pydantic.BaseModel):
 
 @workflows.activity(start_to_close_timeout=timedelta(seconds=120))
 async def fetch_forecasts(spot_ids: list[str]) -> dict[str, dict[str, Any]]:
-    from worker.surfline import fetch_spot_forecasts
+    from worker.openmeteo import fetch_spot_forecasts
 
     return await fetch_spot_forecasts(spot_ids)
 

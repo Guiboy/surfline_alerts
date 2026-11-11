@@ -165,13 +165,14 @@ def build_email(
 
     text_body = (
         "Bonnes conditions de surf prévues :\n\n" + "\n".join(text_lines)
-        + "\n\nSource : Surfline — https://www.surfline.com"
+        + "\n\nPrévisions : Open-Meteo (houle + vent) — notes calculées localement."
+        + "\nSpots sur Surfline : https://www.surfline.com"
     )
     html_body = (
         "<h2>🏄 Bonnes conditions de surf à venir</h2>"
         + "".join(html_sections)
-        + "<p style=\"color:#888\">Source : <a href=\"https://www.surfline.com\">Surfline</a>"
-        " — alerte générée automatiquement.</p>"
+        + "<p style=\"color:#888\">Prévisions Open-Meteo — notes calculées automatiquement."
+        " Spots : <a href=\"https://www.surfline.com\">Surfline</a>.</p>"
     )
     subject = f"🏄 Surf : {len(windows)} spot(s) bien notés à J+1/J+2"
     return subject, text_body, html_body
